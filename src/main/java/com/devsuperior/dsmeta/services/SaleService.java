@@ -33,21 +33,10 @@ public class SaleService {
 	}
 
 	public Page<SaleSummerDTO> findSumary(String min, String max, Pageable pageable) {
-		LocalDate minDate;
-		LocalDate maxDate;
 
-		if(max.equals("")){
-			maxDate = LocalDate.ofInstant(Instant.now(), ZoneId.systemDefault());
-		}
-		else{
-			maxDate = LocalDate.parse(max);
-		}
-		if(min.equals("")){
-			minDate = maxDate.minusYears(1L);;
-		}
-		else {
-			minDate = LocalDate.parse(min);
-		}
+		LocalDate maxDate = ValidationMaXDate(max);
+		LocalDate minDate = ValidationMinDate(maxDate,min);
+
 		 return repository.searchSumary(minDate,maxDate,pageable);
 	}
 	/*public Page<SaleReportDTO> findReport(Pageable pageable) {
@@ -57,22 +46,32 @@ public class SaleService {
 		return	result;
 	}*/
 	public Page<SaleReportDTO> findReport(String min, String max,String name, Pageable pageable) {
-		LocalDate minDate;
-		LocalDate maxDate;
 
-		if(max.equals("")){
-			maxDate = LocalDate.ofInstant(Instant.now(), ZoneId.systemDefault());
-		}
-		else{
-			maxDate = LocalDate.parse(max);
-		}
-		if(min.equals("")){
-			minDate = maxDate.minusYears(1L);;
-		}
-		else {
-			minDate = LocalDate.parse(min);
-		}
+		LocalDate maxDate = ValidationMaXDate(max);
+		LocalDate minDate = ValidationMinDate(maxDate,min);
+
 		Page<SaleReportDTO> result = repository.searchReport(minDate,maxDate,name,pageable);
 		return	result;
 	}
+	private LocalDate ValidationMaXDate (String max){
+		LocalDate maxDate;
+		if(max.equals("")){
+			return  maxDate = LocalDate.ofInstant(Instant.now(), ZoneId.systemDefault());
+		}
+		else{
+			return maxDate = LocalDate.parse(max);
+		}
+	}
+	private LocalDate ValidationMinDate (LocalDate maxDate,String min){
+		LocalDate minDate;
+		if(min.equals("")){
+			return minDate = maxDate.minusYears(1L);
+
+		}
+		else {
+			return minDate = LocalDate.parse(min);
+		}
+	}
 }
+
+
